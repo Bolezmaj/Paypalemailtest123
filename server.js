@@ -21,7 +21,7 @@ app.use(limiter);
 
 const PAYPAL_CLIENT_ID = process.env.PAYPAL_CLIENT_ID;
 const PAYPAL_SECRET = process.env.PAYPAL_SECRET;
-const PAYPAL_API = "https://api-m.sandbox.paypal.com"; // Change to live URL when in production
+const PAYPAL_API = "https://api-m.paypal.com"; // Live PayPal API
 const KEYAUTH_SELLER_KEY = process.env.KEYAUTH_SELLER_KEY;
 const PORT = process.env.PORT || 5000;
 
@@ -75,17 +75,17 @@ app.post("/api/paypal/create-order", async (req, res) => {
                             quantity: 1,
                             unit_amount: {
                                 currency_code: currency,
-                                value: price
+                                value: "0.01",
                             }
                         }
                     ],
                     amount: {
                         currency_code: currency,
-                        value: price,
+                        value: "0.01",
                         breakdown: {
                             item_total: {
                                 currency_code: currency,
-                                value: price
+                                value: "0.01",
                             }
                         }
                     }
