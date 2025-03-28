@@ -75,17 +75,17 @@ app.post("/api/paypal/create-order", async (req, res) => {
                             quantity: 1,
                             unit_amount: {
                                 currency_code: currency,
-                                value: "0.01",
+                                value: price,
                             }
                         }
                     ],
                     amount: {
                         currency_code: currency,
-                        value: "0.01",
+                        value: price,
                         breakdown: {
                             item_total: {
                                 currency_code: currency,
-                                value: "0.01",
+                                value: price,
                             }
                         }
                     }
