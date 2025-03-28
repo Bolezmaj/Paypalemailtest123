@@ -109,38 +109,36 @@ app.post("/api/paypal/create-order", async (req, res) => {
 });
 
 
-const sendLicenseEmail = require("./emailService"); // Import the email function
+const sendLicenseEmail = require("./emailService"); // Import email service
 
 app.post("/api/paypal/capture-order", async (req, res) => {
     try {
-        const { orderID } = req.body; // Get order ID from request
+        const { orderID } = req.body; // Get PayPal order ID
 
         console.log("Capturing PayPal order:", orderID);
-
+        
         const accessToken = await getPayPalAccessToken();
 
-        // Capture the PayPal order
+        // Capture PayPal order
         const captureResponse = await axios.post(
             `${PAYPAL_API}/v2/checkout/orders/${orderID}/capture`,
             {},
-            {
-                headers: { Authorization: `Bearer ${accessToken}`, "Content-Type": "application/json" }
-            }
+            { headers: { Authorization: `Bearer ${accessToken}`, "Content-Type": "application/json" } }
         );
 
-        console.log("Capture successful:", captureResponse.data);
+        console.log("✅ Payment captured:", captureResponse.data);
 
         // Extract buyer's email from PayPal API response
         const payerEmail = captureResponse.data.payer.email_address;
-        console.log("Buyer’s Email:", payerEmail);
+        console.log("📩 Buyer’s Email:", payerEmail);
 
         // Generate a license key
         const licenseKey = await generateLicenseKey();
-        console.log("Generated License Key:", licenseKey);
+        console.log("🔑 Generated License Key:", licenseKey);
 
-        // Send email with the license key to the PayPal buyer's email
+        // Send email with the license key
         await sendLicenseEmail(payerEmail, licenseKey);
-        console.log("📧 Email sent successfully to:", payerEmail);
+        console.log("📧 Email sent to:", payerEmail);
 
         res.json({ licenseKey, message: `License key sent to ${payerEmail}` });
 
@@ -149,6 +147,7 @@ app.post("/api/paypal/capture-order", async (req, res) => {
         res.status(500).json({ error: "Failed to capture PayPal order." });
     }
 });
+
 
 
 
